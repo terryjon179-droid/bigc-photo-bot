@@ -1,23 +1,37 @@
+import asyncio
 from telegram import Update
-from telegram.ext import Application, CommandHandler, MessageHandler, ContextTypes, filters
+from telegram.ext import (
+    Application,
+    CommandHandler,
+    MessageHandler,
+    ContextTypes,
+    filters,
+)
 
-TOKEN = "YOUR_BOT_TOKEN_HERE"
+TOKEN = "8894654114:AAGEAslb41TkID1IiJch54fQhpMXguOY4_U"
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "👋 Hello! Welcome.\n\n"
-        "Tell me what you want.\n"
-        "I can edit pictures. Just send me a photo!"
+        "👋 Hello! Welcome.\n\nTell me what you want.\nI can edit pictures. Send me a photo!"
     )
 
 async def photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "📷 I received your photo! Photo editing will be added in the next step."
+        "📷 I received your photo!"
     )
 
-app = Application.builder().token(TOKEN).build()
+async def main():
+    app = Application.builder().token(TOKEN).build()
 
-app.add_handler(CommandHandler("start", start))
-app.add_handler(MessageHandler(filters.PHOTO, photo))
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(MessageHandler(filters.PHOTO, photo))
 
-app.run_polling()
+    await app.initialize()
+    await app.start()
+    await app.updater.start_polling()
+
+    while True:
+        await asyncio.sleep(3600)
+
+if __name__ == "__main__":
+    asyncio.run(main())
